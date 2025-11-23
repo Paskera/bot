@@ -5,7 +5,7 @@ from bot.config import settings
 from bot.tests.tests import tests
 from bot.database.session import create_tables, SessionLocal
 from bot.database.models import User
-from bot.database.crud import get_or_create_user, get_stats
+from bot.database.crud import get_users, get_stats, create_user
 
 user_states: dict[int, dict[int, int]] = {} # {user_id: {'test_id': test_id, 'que_id': que_id}}
 
@@ -29,9 +29,8 @@ def main():
 
     for event in longpoll.listen():
         if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.from_user:
-            db = SessionLocal()
-
             try:
+                db = SessionLocal()
                 # get ref
                 message_info = vk.messages.getById(message_ids=[event.message_id], extended=1)
                 ref_value = message_info['items'][0].get('ref')
@@ -42,7 +41,7 @@ def main():
                 print(f"Ошибка обработки сообщения: {e}")
             # ? 
             finally: 
-                db.close
+                db.close()
 
 def handle_message(db, event, vk_session, ref_value):
     id = event.user_id
@@ -55,7 +54,7 @@ def handle_message(db, event, vk_session, ref_value):
         send_msg(vk_session, id, 'Перейдите по qr code, чтобы начать тест', keyboard)
 
     # Get stats users
-    elif msg == 'список':
+    elif msg == '/список':
         stats_users = get_stats(db)
         send_msg(vk_session, id, stats_users)
 
@@ -68,17 +67,8 @@ def handle_message(db, event, vk_session, ref_value):
             return 0
         send_msg(vk_session, id, 'Подпишитесь на Студенческие отряды Республики Крым \nВК https://vk.com/rso_crimea \nТГ https://t.me/krorso', keyboard)
         test_id = int(ref_value[4])
-        user = get_or_create_user(db, id, vk_session, test_id)
-
-        test_completed = False
-        if test_id == 1 and user.test1:
-            test_completed = True
-        elif test_id == 2 and user.test2:
-            test_completed = True
-        elif test_id == 3 and user.test3:
-            test_completed = True
-        
-        if test_completed:
+        users = get_users(db, id, test_id)
+        if users:
             send_msg(vk_session, id, 'Вы уже прошли этот тест!')
             return 0
 
@@ -91,16 +81,8 @@ def handle_message(db, event, vk_session, ref_value):
         # добавить билет
         if user_states[id]['que_id'] == 5:
             test_id = user_states[id]['test_id']
-            user = get_or_create_user(db, id, vk_session, test_id)
-            if user:
-                # Обновляем существующую запись
-                if test_id == 1:
-                    user.test1 = True
-                elif test_id == 2:
-                    user.test2 = True
-                elif test_id == 3:
-                    user.test3 = True
-                db.commit()
+            user = create_user(db, id, vk_session, test_id)
+            send_msg(vk_session, id, f'Твой билет на розыгрыш {user.id}')
 
             user_states.pop(id)
             return 0
@@ -114,9 +96,6 @@ def send_msg(vk_session, id, text, keyboard=None):
     else:
         vk_session.method('messages.send',
                             {'user_id': id, 'message': text, 'random_id': 0, 'keyboard': keyboard.get_keyboard()})
-
-# Need it?    
-
 
 # # Need it?
 # def send_attachment(id, url, text=None):

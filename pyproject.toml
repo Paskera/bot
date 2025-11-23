@@ -1,28 +1,25 @@
-[project]
+[tool.poetry]
 name = "bot"
 version = "0.1.0"
-description = ""
-authors = [
-    {name = "Paskera",email = "craftsun@yandex.ru"}
-]
+description = "VK Bot for testing system"
+authors = ["Paskera <craftsun@yandex.ru>"]
 readme = "README.md"
-requires-python = ">=3.13"
-dependencies = [
-    "vk-api (>=11.10.0,<12.0.0)",
-    "pymysql (>=1.1.2,<2.0.0)",
-    "cryptography (>=46.0.3,<47.0.0)",
-    "sqlalchemy (>=2.0.44,<3.0.0)",
-    "dotenv (>=0.9.9,<0.10.0)",
-    "psycopg2-binary (>=2.9.11,<3.0.0)"
+packages = [
+    { include = "bot", from = "src" }
 ]
 
-[tool.poetry]
-packages = [{include = "bot", from = "src"}]
+[tool.poetry.dependencies]
+python = ">=3.13"
+vk-api = "^11.10.0"
+pymysql = "^1.1.2"
+cryptography = "^46.0.3"
+sqlalchemy = "^2.0.44"
+dotenv = "^0.9.9"
+psycopg2-binary = "^2.9.11"
 
+[tool.poetry.scripts]
+dev = "src.bot.main:main"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.scripts]
-dev = "src.bot.main:main"
