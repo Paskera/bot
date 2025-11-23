@@ -25,36 +25,30 @@
 
 - Команда /список выведет список всех участников прошедших тест
 
-### Архитектура
+### Архитектура проекта
 
-\---bot
-    |   .env
-    |   .env.example
-    |   .gitignore
-    |   poetry.lock
-    |   pyproject.toml
-    |   README.md
-    |
-    +---src
-    |   \---bot
-    |       |   config.py
-    |       |   main.py
-    |       |   __init__.py
-    |       |
-    |       +---database
-    |       |   |   base.py
-    |       |   |   crud.py
-    |       |   |   models.py
-    |       |   |   session.py
-    |       |   |   __init__.py
-    |       |   |
-    |       |
-    |       +---tests
-    |       |   |   tests.py
-    |       |   |   __init__.py
-    |       |   
-    |       |   
-    |       
-    |
-    \---tests
-        |   __init__.py
+```plaintext
+bot/
+├── .env
+├── .env.example
+├── .gitignore
+├── poetry.lock
+├── pyproject.toml
+├── README.md
+├── src/
+│   └── bot/
+│       ├── config.py
+│       ├── main.py
+│       ├── __init__.py
+│       ├── database/
+│       │   ├── base.py
+│       │   ├── crud.py
+│       │   ├── models.py
+│       │   ├── session.py
+│       │   └── __init__.py
+│       └── tests/
+│           ├── tests.py
+│           └── __init__.py
+└── tests/
+    └── __init__.py
+```
