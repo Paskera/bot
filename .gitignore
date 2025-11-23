@@ -1,0 +1,20 @@
+# Poetry
+poetry.lock
+
+# Environment
+.env
+
+# Virtual Environment
+.venv/
+venv/
+
+# Database
+*.db
+
+# Logs
+*.log
+logs/
+
+# Python
+__pycache__/
+*.pyc
