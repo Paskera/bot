@@ -39,7 +39,6 @@ def main():
                 handle_message(db, event, vk_session, ref_value)
             except Exception as e:
                 print(f"Ошибка обработки сообщения: {e}")
-            # ? 
             finally: 
                 db.close()
 
@@ -78,7 +77,6 @@ def handle_message(db, event, vk_session, ref_value):
     # During test
     elif id in user_states:
         send_msg(vk_session, id, f"{tests[user_states[id]['test_id']][user_states[id]['que_id']][1]}")
-        # добавить билет
         if user_states[id]['que_id'] == 5:
             test_id = user_states[id]['test_id']
             user = create_user(db, id, vk_session, test_id)
@@ -90,6 +88,7 @@ def handle_message(db, event, vk_session, ref_value):
         send_test(vk_session, id, user_states[id]['test_id'], user_states[id]['que_id'])
 
 def send_msg(vk_session, id, text, keyboard=None):
+    # Rewrite
     if keyboard is None:
         vk_session.method('messages.send',
                             {'user_id': id, 'message': text, 'random_id': 0, })

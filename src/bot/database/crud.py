@@ -27,5 +27,5 @@ def get_stats(db):
     users_with_tests = db.query(User).filter(User.test_id != None ).order_by(User.id).all()
     result = []
     for user in users_with_tests:
-        result.append(f"{user.id}. {user.name} | {user.vk_id}")
+        result.append(f"{user.id}. {user.name} | vk.com/id{user.vk_id}")
     return '\n'.join(result)
