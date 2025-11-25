@@ -57,6 +57,10 @@ def handle_message(db, event, vk_session, ref_value):
         stats_users = get_stats(db)
         send_msg(vk_session, id, stats_users)
 
+    # Meme
+    elif msg == 'лучистый':
+        send_msg(vk_session, id, f"я вас не слыыыышуу")
+
     # Start test
     elif msg == 'начать тест':
         keyboard = VkKeyboard()
